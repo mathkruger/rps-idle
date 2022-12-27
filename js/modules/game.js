@@ -77,7 +77,7 @@ export class Game {
     start() {
         this.ui.startButton.setAttribute("disabled", "true");
         this.ui.bet.setAttribute("disabled", "true");
-        this.ui.results.innerHTML = `<ul id="partials"></ul>`;
+        this.ui.results.innerHTML = `<ul class="list-group" id="partials"></ul>`;
 
         requestAnimationFrame((now) => {
             this.create();
@@ -99,16 +99,23 @@ export class Game {
     }
 
     updateResults() {
-        const qtdRock = this.elements.filter(x => x instanceof Rock).length;
-        const qtdPaper = this.elements.filter(x => x instanceof Paper).length;
-        const qtdScissors = this.elements.filter(x => x instanceof Scissors).length;
+        const qtdRock = (this.elements.filter(x => x instanceof Rock).length / this.elements.length) * 100;
+        const qtdPaper = (this.elements.filter(x => x instanceof Paper).length / this.elements.length) * 100;
+        const qtdScissors = (this.elements.filter(x => x instanceof Scissors).length / this.elements.length) * 100;
 
-        const rangeHTML = `<input style="pointer-events: none" type="range" min="0" max="${this.elements.length}" step="1" value="$QTD" />`;
+        const bigger = qtdRock > qtdPaper && qtdRock > qtdScissors ? qtdRock :
+        (qtdPaper > qtdRock && qtdPaper > qtdScissors ? qtdPaper : qtdScissors);
+
+        const rangeHTML = `
+        <div style="width: 100%" class="progress" role="progressbar">
+            <div class="progress-bar progress-bar-animated bg-warning" style="width: $QTD%"></div>
+        </div>
+        `;
 
         this.ui.results.querySelector("#partials").innerHTML = `
-            <li>Rock Quantity: ${rangeHTML.replace("$QTD", qtdRock)}</li>
-            <li>Paper Quantity: ${rangeHTML.replace("$QTD", qtdPaper)}</li>
-            <li>Scissors Quantity: ${rangeHTML.replace("$QTD", qtdScissors)}</li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}"><span>✊</span> ${rangeHTML.replace("$QTD", qtdRock)}</li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdPaper ? 'active' : ''}"><span>🖐</span> ${rangeHTML.replace("$QTD", qtdPaper)}</li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdScissors ? 'active' : ''}"><span>✌</span> ${rangeHTML.replace("$QTD", qtdScissors)}</li>
         `;
     }
 
@@ -132,13 +139,21 @@ export class Game {
             win = "scissors";
         }
 
-        this.ui.results.innerHTML += `<p>${win.toUpperCase()} won the game</p>`;
-
+        let resultHTML = `<div class="mt-4 alert $CLASS" role="alert">
+            ${win.toUpperCase()} won the game <br/>`;
+        
+        let alertClass = "alert-success";
+        
         if (this.ui.bet.value == win) {
-            this.ui.results.innerHTML += "<p>You won!</p>";
+            resultHTML += "You won!";
         }
         else {
-            this.ui.results.innerHTML += "<p>You loose :(</p>";
+            alertClass = "alert-danger";
+            resultHTML += "You lost :(";
         }
+
+        resultHTML += "</div>"
+
+        this.ui.results.innerHTML += resultHTML.replace("$CLASS", alertClass);
     }
 }
