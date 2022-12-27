@@ -11,5 +11,7 @@ export class Entity {
         this.isSolid = isSolid;
     }
 
-    update() { }
+    update(canvas) { }
+
+    checkCollision(elements) { }
 }

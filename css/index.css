@@ -1,0 +1,13 @@
+body, html {
+    margin: 0px;
+}
+
+canvas {
+    background-color: black;
+}
+
+.game-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+}

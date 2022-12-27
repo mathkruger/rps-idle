@@ -6,7 +6,6 @@ export class Renderer {
     }
 
     render() {
-        this.clearScreen();
         this.stack.forEach(element => {
             switch (element.renderMode) {
                 default:
@@ -53,7 +52,7 @@ export class Renderer {
         this.context.fillText(text, x, y);
     }
 
-    clearScreen(x = 0, y = 0, width = this.screenWidth, height = this.screenHeight) {
+    clearScreen(x = 0, y = 0, width = this.canvas.width, height = this.canvas.height) {
         this.context.clearRect(x, y, width, height);
     }
 }
