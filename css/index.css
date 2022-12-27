@@ -3,11 +3,9 @@ body, html {
 }
 
 canvas {
-    background-color: black;
+    background-color: #058ED9;
     margin: 0 auto;
     display: block;
-    border: 10px solid;
-    border-radius: 10px;
 }
 
 .game-container {
@@ -19,14 +17,14 @@ canvas {
 @media screen and (max-width: 1660px) {
     canvas {
         zoom: 0.7;
-        -moz-transform: scale(0.6) translate(-25%, -25%);
+        -moz-transform: scale(0.7) translate(-17%, -25%);
     }
 }
 
 @media screen and (max-width: 960px) {
     canvas {
         zoom: 0.7;
-        -moz-transform: scale(0.6) translate(-25%, -25%);
+        -moz-transform: scale(0.7) translate(-17%, -25%);
     }
 }
 

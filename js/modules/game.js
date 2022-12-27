@@ -58,6 +58,15 @@ export class Game {
 
             if (this.elements.every(x => x.win == this.elements[0].win)) {
                 this.gameFinished = true;
+
+                const bigSymbol = new this.elements[0].constructor(0, 0, 0);
+                bigSymbol.width = 264;
+                bigSymbol.height = 264;
+
+                bigSymbol.x = (this.width / 2) - (bigSymbol.width / 2);
+                bigSymbol.y = (this.height / 2) - (bigSymbol.height / 2);
+
+                this.elements.push(bigSymbol);
                 this.showFinalResults(this.elements[0].constructor);
             }
 
@@ -77,6 +86,7 @@ export class Game {
     start() {
         this.ui.startButton.setAttribute("disabled", "true");
         this.ui.bet.setAttribute("disabled", "true");
+        this.ui.speed.setAttribute("disabled", "true");
         this.ui.results.innerHTML = `<ul class="list-group" id="partials"></ul>`;
 
         requestAnimationFrame((now) => {
@@ -116,15 +126,15 @@ export class Game {
 
         this.ui.results.querySelector("#partials").innerHTML = `
             <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}">
-                <i class="em em-fist"></i>
+                <img width="32" src="assets/rock.png" />
                 ${rangeHTML.replace("$QTD", qtdRock)}
             </li>
             <li class="list-group-item d-flex align-items-center ${bigger == qtdPaper ? 'active' : ''}">
-                <i class="em em-raised_hand_with_fingers_splayed"></i>
+                <img width="32" src="assets/paper.png" />
                 ${rangeHTML.replace("$QTD", qtdPaper)}
             </li>
             <li class="list-group-item d-flex align-items-center ${bigger == qtdScissors ? 'active' : ''}">
-                <i class="em em-v"></i>
+                <img width="32" src="assets/scissors.png" />
                 ${rangeHTML.replace("$QTD", qtdScissors)}
             </li>
         `;
@@ -133,6 +143,7 @@ export class Game {
     showFinalResults(winType) {
         this.ui.startButton.removeAttribute("disabled");
         this.ui.bet.removeAttribute("disabled");
+        this.ui.speed.removeAttribute("disabled");
 
         const winObject = new winType(0, 0);
 
@@ -151,7 +162,7 @@ export class Game {
         }
 
         let resultHTML = `<div class="mt-4 alert $CLASS" role="alert">
-            ${win.toUpperCase()} won the game. <br/>`;
+            <img width="32" src="assets/${win}.png" /> ${win.toUpperCase()} won the game. `;
         
         let alertClass = "alert-success";
         
