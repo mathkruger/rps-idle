@@ -49,7 +49,7 @@ export class Game {
             indexesToRemove.forEach(i => {
                 if (i != null) {
                     const element = this.elements[i.index];
-                    const sub = new i.replace(element.x, element.y);
+                    const sub = new i.replace(element.x, element.y, element.speed);
                     this.elements[i.index] = sub;
                 }
             });
@@ -92,8 +92,10 @@ export class Game {
             for (let i = 0; i < 33; i++) {
                 const randX = (this.width - 64) * Math.random() | 0;
                 const randY = (this.height - 64) * Math.random() | 0;
+
+                const speed = parseInt(this.ui.speed.value);
     
-                this.elements.push(new el(randX, randY));
+                this.elements.push(new el(randX, randY, speed));
             }
         });
     }
@@ -107,15 +109,24 @@ export class Game {
         (qtdPaper > qtdRock && qtdPaper > qtdScissors ? qtdPaper : qtdScissors);
 
         const rangeHTML = `
-        <div style="width: 100%" class="progress" role="progressbar">
+        <div style="width: 100%; margin-left: 10px;" class="progress" role="progressbar">
             <div class="progress-bar progress-bar-animated bg-warning" style="width: $QTD%"></div>
         </div>
         `;
 
         this.ui.results.querySelector("#partials").innerHTML = `
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}"><span>✊</span> ${rangeHTML.replace("$QTD", qtdRock)}</li>
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdPaper ? 'active' : ''}"><span>🖐</span> ${rangeHTML.replace("$QTD", qtdPaper)}</li>
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdScissors ? 'active' : ''}"><span>✌</span> ${rangeHTML.replace("$QTD", qtdScissors)}</li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}">
+                <i class="em em-fist"></i>
+                ${rangeHTML.replace("$QTD", qtdRock)}
+            </li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdPaper ? 'active' : ''}">
+                <i class="em em-raised_hand_with_fingers_splayed"></i>
+                ${rangeHTML.replace("$QTD", qtdPaper)}
+            </li>
+            <li class="list-group-item d-flex align-items-center ${bigger == qtdScissors ? 'active' : ''}">
+                <i class="em em-v"></i>
+                ${rangeHTML.replace("$QTD", qtdScissors)}
+            </li>
         `;
     }
 
@@ -140,7 +151,7 @@ export class Game {
         }
 
         let resultHTML = `<div class="mt-4 alert $CLASS" role="alert">
-            ${win.toUpperCase()} won the game <br/>`;
+            ${win.toUpperCase()} won the game. <br/>`;
         
         let alertClass = "alert-success";
         

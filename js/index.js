@@ -4,8 +4,11 @@ const canvas = document.querySelector("#main-game");
 const ui = {
     startButton: document.querySelector("#start"),
     bet: document.querySelector("#bet"),
-    results: document.querySelector("#results")
+    speed: document.querySelector("#speed"),
+    results: document.querySelector("#results"),
 };
+
+
 
 ui.startButton.addEventListener("click", () => {
     new Game(canvas, ui).start();

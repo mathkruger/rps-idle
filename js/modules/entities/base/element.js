@@ -1,14 +1,14 @@
 import { Entity } from "./entity.js";
 
 export class Element extends Entity {
-    constructor(x, y, sprite) {
-        super(x, y, 32, 32, null, 30, "sprite", sprite, true);
+    constructor(x, y, sprite, speed = 1) {
+        super(x, y, 32, 32, null, speed, "sprite", sprite, true);
         this.win = null;
 
-        const possibleDelta = [2, -2, 1, -1, 3, -3, 4, -4];
+        const possibleDelta = [2, -2, 3, -3, 4, -4];
 
-        this.dx = possibleDelta[possibleDelta.length * Math.random() | 0];
-        this.dy = possibleDelta[possibleDelta.length * Math.random() | 0];
+        this.dx = possibleDelta[possibleDelta.length * Math.random() | 0] * this.speed;
+        this.dy = possibleDelta[possibleDelta.length * Math.random() | 0] * this.speed;
     }
 
     update(canvas) {

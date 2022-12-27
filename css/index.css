@@ -19,23 +19,27 @@ canvas {
 @media screen and (max-width: 1660px) {
     canvas {
         zoom: 0.7;
-    }
-}
-
-@media screen and (max-width: 1160px) {
-    canvas {
-        zoom: 0.5;
+        -moz-transform: scale(0.6) translate(-25%, -25%);
     }
 }
 
 @media screen and (max-width: 960px) {
     canvas {
         zoom: 0.7;
+        -moz-transform: scale(0.6) translate(-25%, -25%);
+    }
+}
+
+@media screen and (max-width: 1160px) {
+    canvas {
+        zoom: 0.5;
+        -moz-transform: scale(0.5) translate(-25%, -25%);
     }
 }
 
 @media screen and (max-width: 460px) {
     canvas {
         zoom: 0.4;
+        -moz-transform: scale(0.4) translate(-25%, -25%);
     }
 }
