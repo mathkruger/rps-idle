@@ -6,26 +6,18 @@ import { Scissors } from "./entities/scissors.js";
 export class Game {
     constructor(canvas, ui) {
         this.fps = 60;
-        this.width = 800;
-        this.height = 600;
+        this.width = canvas.width;
+        this.height = canvas.height;
         this.lastTime = null;
-        this.requiredElapsed = null;
-    
+        this.requiredElapsed = 1000 / this.fps;
         this.canvas = canvas;
         this.ui = ui;
         this.elements = [];
-        this.renderer = null;
-    
+        this.renderer = new Renderer(this.canvas, this.elements);
         this.gameFinished = false;
     }
 
     create() {
-        this.requiredElapsed = 1000 / this.fps;
-        this.renderer = new Renderer(this.canvas, this.elements);
-
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        
         this.generateElements();
     }
 
@@ -97,7 +89,7 @@ export class Game {
         const availableElements = [Rock, Paper, Scissors];
 
         availableElements.forEach(el => {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 33; i++) {
                 const randX = (this.width - 64) * Math.random() | 0;
                 const randY = (this.height - 64) * Math.random() | 0;
     
@@ -126,8 +118,6 @@ export class Game {
 
         const winObject = new winType(0, 0);
 
-        console.log(winObject);
-
         let win = "";
 
         if (winObject instanceof Rock) {
@@ -144,11 +134,10 @@ export class Game {
 
         this.ui.results.innerHTML += `<p>${win.toUpperCase()} won the game</p>`;
 
-        console.log(this.ui.bet.value, win);
-
         if (this.ui.bet.value == win) {
             this.ui.results.innerHTML += "<p>You won!</p>";
-        } else {
+        }
+        else {
             this.ui.results.innerHTML += "<p>You loose :(</p>";
         }
     }

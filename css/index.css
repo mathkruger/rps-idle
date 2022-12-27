@@ -4,10 +4,38 @@ body, html {
 
 canvas {
     background-color: black;
+    margin: 0 auto;
+    display: block;
+    border: 10px solid;
+    border-radius: 10px;
 }
 
 .game-container {
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
+}
+
+@media screen and (max-width: 1660px) {
+    canvas {
+        zoom: 0.7;
+    }
+}
+
+@media screen and (max-width: 1160px) {
+    canvas {
+        zoom: 0.5;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    canvas {
+        zoom: 0.7;
+    }
+}
+
+@media screen and (max-width: 460px) {
+    canvas {
+        zoom: 0.4;
+    }
 }
