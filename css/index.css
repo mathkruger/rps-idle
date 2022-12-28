@@ -14,6 +14,7 @@ canvas {
     background: white;
     width: 0;
     height: 100vh;
+    opacity: 1;
 }
 
 #ui .content {
@@ -27,6 +28,10 @@ canvas {
     width: 300px;
     padding: 1rem;
     box-shadow: 0 0 20px #00000096;
+}
+
+#ui.active.in-game {
+    opacity: 0.5;
 }
 
 #ui .toggle-button {

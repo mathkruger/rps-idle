@@ -87,7 +87,7 @@ export class Game {
         this.ui.startButton.setAttribute("disabled", "true");
         this.ui.bet.setAttribute("disabled", "true");
         this.ui.speed.setAttribute("disabled", "true");
-        this.ui.panel.classList.remove("active");
+        this.ui.panel.classList.add("in-game");
         this.ui.results.innerHTML = `<ul class="list-group" id="partials"></ul>`;
 
         requestAnimationFrame((now) => {
@@ -147,7 +147,7 @@ export class Game {
         this.ui.startButton.removeAttribute("disabled");
         this.ui.bet.removeAttribute("disabled");
         this.ui.speed.removeAttribute("disabled");
-        this.ui.panel.classList.add("active");
+        this.ui.panel.classList.remove("in-game");
 
         const winObject = new winType(0, 0);
 
