@@ -1,11 +1,5 @@
-body, html {
-    margin: 0px;
-}
-
 canvas {
     background-color: #058ED9;
-    margin: 0 auto;
-    display: block;
 }
 
 .game-container {
@@ -14,7 +8,38 @@ canvas {
     justify-content: space-around;
 }
 
-@media screen and (max-width: 1660px) {
+#ui {
+    position: absolute;
+    right: 0;
+    background: white;
+    width: 0;
+    height: 100vh;
+}
+
+#ui .content {
+    width: 100%;
+    height: calc(100vh - 1rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#ui.active {
+    width: 300px;
+    padding: 1rem;
+    box-shadow: 0 0 20px #00000096;
+}
+
+#ui .toggle-button {
+    position: absolute;
+    left: -60px;
+    top: 20px;
+    border: 0;
+    background: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* @media screen and (max-width: 1660px) {
     canvas {
         zoom: 0.7;
         -moz-transform: scale(0.7) translate(-17%, -25%);
@@ -40,4 +65,4 @@ canvas {
         zoom: 0.4;
         -moz-transform: scale(0.4) translate(-25%, -25%);
     }
-}
+} */

@@ -87,6 +87,7 @@ export class Game {
         this.ui.startButton.setAttribute("disabled", "true");
         this.ui.bet.setAttribute("disabled", "true");
         this.ui.speed.setAttribute("disabled", "true");
+        this.ui.panel.classList.remove("active");
         this.ui.results.innerHTML = `<ul class="list-group" id="partials"></ul>`;
 
         requestAnimationFrame((now) => {
@@ -104,8 +105,10 @@ export class Game {
                 const randY = (this.height - 64) * Math.random() | 0;
 
                 const speed = parseInt(this.ui.speed.value);
+
+                const size = window.mobileCheck ? 16 : 32;
     
-                this.elements.push(new el(randX, randY, speed));
+                this.elements.push(new el(randX, randY, speed, size, size));
             }
         });
     }
@@ -144,6 +147,7 @@ export class Game {
         this.ui.startButton.removeAttribute("disabled");
         this.ui.bet.removeAttribute("disabled");
         this.ui.speed.removeAttribute("disabled");
+        this.ui.panel.classList.add("active");
 
         const winObject = new winType(0, 0);
 
