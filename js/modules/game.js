@@ -2,6 +2,8 @@ import { Renderer } from "./gfx/renderer.js";
 import { Rock } from "./entities/rock.js";
 import { Paper } from "./entities/paper.js";
 import { Scissors } from "./entities/scissors.js";
+import { Utils } from "./utils.js";
+import { Storage } from "./data/storage.js";
 
 export class Game {
     constructor(canvas, ui) {
@@ -107,7 +109,7 @@ export class Game {
 
                 const speed = parseInt(this.ui.speed.value);
 
-                const size = window.mobileCheck ? 16 : 32;
+                const size = Utils.mobileCheck() ? 16 : 32;
     
                 this.elements.push(new el(randX, randY, speed, size, size));
             }
@@ -172,15 +174,18 @@ export class Game {
         let alertClass = "alert-success";
         
         if (this.ui.bet.value == win) {
+            Storage.addWin();
             resultHTML += "You won!";
         }
         else {
+            Storage.addLost();
             alertClass = "alert-danger";
             resultHTML += "You lost :(";
         }
 
         resultHTML += "</div>"
 
+        this.ui.updateStatistics();
         this.ui.results.innerHTML += resultHTML.replace("$CLASS", alertClass);
     }
 }
