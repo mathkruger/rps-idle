@@ -3,12 +3,14 @@ import { Entity } from "./entity.js";
 export class Element extends Entity {
     constructor(x, y, sprite, speed = 1) {
         super(x, y, 32, 32, null, speed, "sprite", sprite, true);
-        this.win = null;
 
         const possibleDelta = [2, -2, 3, -3, 4, -4];
-
         this.dx = possibleDelta[possibleDelta.length * Math.random() | 0] * this.speed;
         this.dy = possibleDelta[possibleDelta.length * Math.random() | 0] * this.speed;
+        
+        this.win = null;
+        this.life = 1;
+        this.gotHit = false;
     }
 
     update(canvas) {
@@ -53,7 +55,14 @@ export class Element extends Entity {
 
     checkWin(collidingObject) {
         if (collidingObject instanceof this.win) {
-            return true;
+            collidingObject.life -= 1;
+            collidingObject.gotHit = true;
+
+            if (collidingObject.life <= 0) {
+                return true;
+            }
+
+            return false;
         }
 
         return false;

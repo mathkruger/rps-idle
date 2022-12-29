@@ -1,5 +1,5 @@
-import { Element } from "./base/element.js";
-import { Sprite } from "./base/sprite.js";
+import { Element } from "./_base/element.js";
+import { Sprite } from "./_base/sprite.js";
 import { Rock } from "./rock.js";
 
 export class Paper extends Element {
