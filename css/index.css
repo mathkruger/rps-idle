@@ -1,3 +1,5 @@
+@import url('https://css.gg/menu-right.css');
+
 canvas {
     background-color: #058ED9;
 }
@@ -32,7 +34,7 @@ canvas {
 
 #ui .toggle-button {
     position: absolute;
-    left: -60px;
+    left: -50px;
     top: 20px;
     border: 0;
     background: white;
@@ -42,7 +44,7 @@ canvas {
     -moz-border-radius-bottomleft: 5px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    padding: 10px;
+    padding: 15px;
 }
 
 #partials {
@@ -68,5 +70,16 @@ canvas {
 
     #partials ul li img {
         width: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #ui.active {
+        width: 250px;
+    }
+
+    #ui .toggle-button {
+        padding: 20px;
+        left: -60px;
     }
 }
