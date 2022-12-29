@@ -39,30 +39,23 @@ canvas {
     padding: 10px;
 }
 
-/* @media screen and (max-width: 1660px) {
-    canvas {
-        zoom: 0.7;
-        -moz-transform: scale(0.7) translate(-17%, -25%);
-    }
+#partials {
+    position: absolute;
+    width: 300px;
+    bottom: 10px;
+    left: 10px;
 }
 
-@media screen and (max-width: 960px) {
-    canvas {
-        zoom: 0.7;
-        -moz-transform: scale(0.7) translate(-17%, -25%);
-    }
+#partials ul li img {
+    width: 32px;
 }
 
 @media screen and (max-width: 1160px) {
-    canvas {
-        zoom: 0.5;
-        -moz-transform: scale(0.5) translate(-25%, -25%);
+    #partials {
+        width: 150px;
+    }
+
+    #partials ul li img {
+        width: 16px;
     }
 }
-
-@media screen and (max-width: 460px) {
-    canvas {
-        zoom: 0.4;
-        -moz-transform: scale(0.4) translate(-25%, -25%);
-    }
-} */

@@ -88,7 +88,8 @@ export class Game {
         this.ui.bet.setAttribute("disabled", "true");
         this.ui.speed.setAttribute("disabled", "true");
         this.ui.panel.classList.remove("active");
-        this.ui.results.innerHTML = `<ul class="list-group" id="partials"></ul>`;
+        this.ui.results.innerHTML = "";
+        this.ui.partials.innerHTML = `<ul class="list-group"></ul>`;
 
         requestAnimationFrame((now) => {
             this.create();
@@ -127,7 +128,7 @@ export class Game {
         </div>
         `;
 
-        this.ui.results.querySelector("#partials").innerHTML = `
+        this.ui.partials.querySelector("ul").innerHTML = `
             <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}">
                 <img width="32" src="assets/rock.png" />
                 ${rangeHTML.replace("$QTD", qtdRock)}
@@ -183,3 +184,4 @@ export class Game {
         this.ui.results.innerHTML += resultHTML.replace("$CLASS", alertClass);
     }
 }
+

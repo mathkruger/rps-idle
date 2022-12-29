@@ -14,7 +14,8 @@ const ui = {
     startButton: document.querySelector("#start"),
     bet: document.querySelector("#bet"),
     speed: document.querySelector("#speed"),
-    results: document.querySelector("#results"),
+    results: document.querySelector("#final-results"),
+    partials: document.querySelector("#partials")
 };
 
 canvas.width = window.innerWidth;
