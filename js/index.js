@@ -16,7 +16,12 @@ const ui = {
     updateStatistics() {
         const actual = Storage.getStatistics();
         const sum = parseInt(actual.lost) + parseInt(actual.wins);
-        const winrate = (parseInt(actual.wins) / sum * 100).toFixed(2);
+        let winrate = 0;
+        
+        if (sum > 0) {
+            winrate = (parseInt(actual.wins) / sum * 100).toFixed(2);
+        }
+
 
         this.statistics.querySelector(".wins").innerHTML = actual.wins;
         this.statistics.querySelector(".lost").innerHTML = actual.lost;
