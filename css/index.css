@@ -30,10 +30,6 @@ canvas {
     box-shadow: 0 0 20px #00000096;
 }
 
-#ui.active.in-game {
-    opacity: 0.5;
-}
-
 #ui .toggle-button {
     position: absolute;
     left: -60px;
@@ -54,6 +50,11 @@ canvas {
     width: 300px;
     bottom: 10px;
     left: 10px;
+    opacity: 0.7;
+}
+
+#partials:is(:hover, :focus) {
+    opacity: 1;
 }
 
 #partials ul li img {
