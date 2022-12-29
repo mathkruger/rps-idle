@@ -14,6 +14,7 @@ canvas {
     background: white;
     width: 0;
     height: 100vh;
+    opacity: 1;
 }
 
 #ui .content {
@@ -29,13 +30,22 @@ canvas {
     box-shadow: 0 0 20px #00000096;
 }
 
+#ui.active.in-game {
+    opacity: 0.5;
+}
+
 #ui .toggle-button {
     position: absolute;
     left: -60px;
     top: 20px;
     border: 0;
     background: white;
-    border-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     padding: 10px;
 }
 
