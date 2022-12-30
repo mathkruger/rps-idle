@@ -17,6 +17,21 @@ export class Game {
         this.elements = [];
         this.renderer = new Renderer(this.canvas, this.elements);
         this.gameFinished = false;
+
+        this.availableElements = [
+            {
+                name: "rock",
+                constructor: Rock
+            },
+            {
+                name: "paper",
+                constructor: Paper
+            },
+            {
+                name: "scissors",
+                constructor: Scissors
+            }
+        ];
     }
 
     create() {
@@ -24,6 +39,8 @@ export class Game {
     }
 
     loop(now) {
+        this.applySkillsEffect(false);
+
         requestAnimationFrame((now) => {
             this.loop(now);
         });
@@ -86,12 +103,7 @@ export class Game {
     }
 
     start() {
-        this.ui.startButton.setAttribute("disabled", "true");
-        this.ui.bet.setAttribute("disabled", "true");
-        this.ui.speed.setAttribute("disabled", "true");
-        this.ui.panel.classList.remove("active");
-        this.ui.results.innerHTML = "";
-        this.ui.partials.innerHTML = `<ul class="list-group"></ul>`;
+        this.ui.gameStart();
 
         requestAnimationFrame((now) => {
             this.create();
@@ -100,20 +112,17 @@ export class Game {
     }
 
     generateElements() {
-        const availableElements = [Rock, Paper, Scissors];
+        const speed = parseInt(this.ui.speed.value);
 
-        availableElements.forEach(el => {
+        this.availableElements.forEach(el => {
             for (let i = 0; i < 33; i++) {
-                const randX = (this.width - 64) * Math.random() | 0;
-                const randY = (this.height - 64) * Math.random() | 0;
-
-                const speed = parseInt(this.ui.speed.value);
-
-                const size = Utils.mobileCheck() ? 16 : 32;
-    
-                this.elements.push(new el(randX, randY, speed, size, size));
+                const obj = Utils.getRandomElement(el.constructor, this.width, this.height);
+                obj.speed = speed;
+                this.elements.push(obj);
             }
         });
+
+        this.applySkillsEffect();
     }
 
     updateResults() {
@@ -124,34 +133,10 @@ export class Game {
         const bigger = qtdRock > qtdPaper && qtdRock > qtdScissors ? qtdRock :
         (qtdPaper > qtdRock && qtdPaper > qtdScissors ? qtdPaper : qtdScissors);
 
-        const rangeHTML = `
-        <div style="width: 100%; margin-left: 10px;" class="progress" role="progressbar">
-            <div class="progress-bar progress-bar-animated bg-warning" style="width: $QTD%"></div>
-        </div>
-        `;
-
-        this.ui.partials.querySelector("ul").innerHTML = `
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdRock ? 'active' : ''}">
-                <img width="32" src="assets/rock.png" />
-                ${rangeHTML.replace("$QTD", qtdRock)}
-            </li>
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdPaper ? 'active' : ''}">
-                <img width="32" src="assets/paper.png" />
-                ${rangeHTML.replace("$QTD", qtdPaper)}
-            </li>
-            <li class="list-group-item d-flex align-items-center ${bigger == qtdScissors ? 'active' : ''}">
-                <img width="32" src="assets/scissors.png" />
-                ${rangeHTML.replace("$QTD", qtdScissors)}
-            </li>
-        `;
+        this.ui.renderPartials({ qtdRock, qtdPaper, qtdScissors, bigger });
     }
 
     showFinalResults(winType) {
-        this.ui.startButton.removeAttribute("disabled");
-        this.ui.bet.removeAttribute("disabled");
-        this.ui.speed.removeAttribute("disabled");
-        this.ui.panel.classList.add("active");
-
         const winObject = new winType(0, 0);
 
         let win = "";
@@ -168,25 +153,28 @@ export class Game {
             win = "scissors";
         }
 
-        let resultHTML = `<div class="mt-4 alert $CLASS" role="alert">
-            <img width="32" src="assets/${win}.png" /> ${win.toUpperCase()} won the game. `;
-        
-        let alertClass = "alert-success";
-        
         if (this.ui.bet.value == win) {
             Storage.addWin();
-            resultHTML += "You won!";
         }
         else {
             Storage.addLost();
-            alertClass = "alert-danger";
-            resultHTML += "You lost :(";
         }
 
-        resultHTML += "</div>"
+        this.ui.gameEnd();
+        this.ui.renderResults(win);
+    }
 
-        this.ui.updateStatistics();
-        this.ui.results.innerHTML += resultHTML.replace("$CLASS", alertClass);
+    applySkillsEffect(atGameStart = true) {
+        this.ui.activatedSkills.forEach((skill) => {
+            skill.action({
+                constructor: this.availableElements.find(x => x.name == this.ui.bet.value).constructor,
+                screenElements: this.elements,
+                screenWidth: this.width,
+                screenHeight: this.height,
+                speed: parseInt(this.ui.speed.value),
+                atGameStart
+            });
+        });
     }
 }
 
