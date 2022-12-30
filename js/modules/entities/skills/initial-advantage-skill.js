@@ -1,5 +1,5 @@
 import { Utils } from "../../utils.js";
-import { Skill } from "../_base/skill.js";
+import { Skill } from "../base/skill.js";
 
 export class InitialAdvantageSkill extends Skill {
     constructor() {
