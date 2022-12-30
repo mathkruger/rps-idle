@@ -2,7 +2,7 @@ import { Storage } from "./modules/data/storage.js";
 import { Game } from "./modules/game.js";
 import { InitialAdvantageSkill } from "./modules/entities/skills/initial-advantage-skill.js";
 import { ShrinkSkill } from "./modules/entities/skills/shrink-skill.js";
-import { SecondChange } from "./modules/entities/skills/second-chance-skill.js";
+import { SecondChanceSkill } from "./modules/entities/skills/second-chance-skill.js";
 
 const canvas = document.querySelector("canvas#main-game");
 const toggleButton = document.querySelector(".toggle-button");
@@ -17,8 +17,8 @@ const ui = {
     statistics: document.querySelector("#statistics"),
     activatedSkills: [
         // new InitialAdvantageSkill(),
-        // new ShrinkSkill(),
-        // new SecondChange()
+        new ShrinkSkill(),
+        new SecondChanceSkill()
     ],
 
     renderPartials({ qtdRock, qtdPaper, qtdScissors, bigger }) {

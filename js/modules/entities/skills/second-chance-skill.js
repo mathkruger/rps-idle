@@ -1,6 +1,6 @@
 import { Skill } from "../_base/skill.js";
 
-export class SecondChange extends Skill {
+export class SecondChanceSkill extends Skill {
     constructor() {
         super(
             "Second Chance",
