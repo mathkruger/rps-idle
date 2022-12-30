@@ -1,8 +1,6 @@
 import { Storage } from "./modules/data/storage.js";
 import { Game } from "./modules/game.js";
-import { InitialAdvantageSkill } from "./modules/entities/skills/initial-advantage-skill.js";
-import { ShrinkSkill } from "./modules/entities/skills/shrink-skill.js";
-import { SecondChanceSkill } from "./modules/entities/skills/second-chance-skill.js";
+import { Utils } from "./modules/utils.js";
 
 const canvas = document.querySelector("canvas#main-game");
 const toggleButton = document.querySelector(".toggle-button");
@@ -15,11 +13,8 @@ const ui = {
     results: document.querySelector("#final-results"),
     partials: document.querySelector("#partials"),
     statistics: document.querySelector("#statistics"),
-    activatedSkills: [
-        // new InitialAdvantageSkill(),
-        new ShrinkSkill(),
-        new SecondChanceSkill()
-    ],
+    skillsList: document.querySelector("#user-skills"),
+    activatedSkills: [],
 
     renderPartials({ qtdRock, qtdPaper, qtdScissors, bigger }) {
         const rangeHTML = `
@@ -45,23 +40,24 @@ const ui = {
     },
 
     renderResults(win) {
-        let resultHTML = `<div class="mt-4 alert $CLASS" role="alert">
-            <img width="32" src="assets/${win}.png" /> ${win.toUpperCase()} won the game. `;
-        
-        let alertClass = "alert-success";
-        
-        if (this.bet.value == win) {
-            resultHTML += "You won!";
-        }
-        else {
-            alertClass = "alert-danger";
-            resultHTML += "You lost :(";
-        }
+        let playerWon = this.bet.value == win;
+        let alertClass = playerWon ? "alert-success" : "alert-danger";
 
-        resultHTML += "</div>"
+        let resultHTML = `
+            <div class="mt-4 alert ${alertClass}" role="alert">
+                <img width="32" src="assets/${win}.png" /> ${win.toUpperCase()} won the game.
+                ${playerWon ? "You won!" : "You lost :("}
+            </div>
+        `;
 
+        this.results.innerHTML += resultHTML;
         this.renderStatistics();
-        this.results.innerHTML += resultHTML.replace("$CLASS", alertClass);
+
+        if (playerWon) {
+            this.givePlayerRandomSkill();
+        }
+
+        this.renderUserSkills();
     },
 
     renderStatistics() {
@@ -92,15 +88,67 @@ const ui = {
         this.bet.removeAttribute("disabled");
         this.speed.removeAttribute("disabled");
         this.panel.classList.add("active");
+    },
+
+    renderUserSkills() {
+        const userSkills = Storage.getSkills();
+    
+        if (userSkills.length == 0) {
+            this.skillsList.innerHTML = `<li class="list-group-item">
+                You don't have any skills. Win some games to obtain skills.
+            </li>`;
+            return;
+        }
+    
+        this.skillsList.innerHTML = "";
+        userSkills.forEach((element, i) => {
+            this.skillsList.innerHTML += `
+                <li class="list-group-item">
+                    <input class="form-check-input me-1 skill" type="checkbox" value="" id="${element.id}">
+                    <label class="form-check-label stretched-link" for="${element.id}">
+                        ${element.name} x${element.quantity}
+                    </label>
+                </li>
+            `;
+        });
+    },
+
+    givePlayerRandomSkill() {
+        const chosenSkill = Utils.availableSkills[Utils.availableSkills.length * Math.random() | 0];
+        Storage.addSkill(chosenSkill);
+    
+        let newSkillHTML = `
+            <div class="mt-4 alert alert-success mt-2" role="alert">
+                You received the "${chosenSkill.name}" skill! You can activate it in your next game.
+            </div>
+        `;
+    
+        this.results.innerHTML += newSkillHTML;
+    },
+
+    setActivatedSkills() {
+        const selectedIds = Array.from(document.querySelectorAll(".skill"))
+        .filter(x => x.checked)
+        .map(x => x.id);
+
+        this.activatedSkills = [];
+
+        selectedIds.forEach(id => {
+            const skillToActivate = Utils.availableSkills.find(x => x.id == id);
+            this.activatedSkills = [...this.activatedSkills, skillToActivate];
+            Storage.removeSkill(skillToActivate.id);
+        });
     }
 };
 
+ui.renderUserSkills();
 ui.renderStatistics();
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 ui.startButton.addEventListener("click", () => {
+    ui.setActivatedSkills();
     new Game(canvas, ui).start();
 });
 

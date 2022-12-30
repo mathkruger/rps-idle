@@ -3,6 +3,7 @@ import { Skill } from "../_base/skill.js";
 export class SecondChanceSkill extends Skill {
     constructor() {
         super(
+            "second-chance",
             "Second Chance",
             "The element you select have 2 lives."
         );

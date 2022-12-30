@@ -4,6 +4,7 @@ import { Skill } from "../_base/skill.js";
 export class InitialAdvantageSkill extends Skill {
     constructor() {
         super(
+            "intial-advantage",
             "Initial Advantage",
             "Starts the game with 10 more of the chosen element on the field."
         );
