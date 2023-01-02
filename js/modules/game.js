@@ -3,7 +3,6 @@ import { Rock } from "./entities/rock.js";
 import { Paper } from "./entities/paper.js";
 import { Scissors } from "./entities/scissors.js";
 import { Utils } from "./utils.js";
-import { Storage } from "./data/storage.js";
 
 export class Game {
     constructor(canvas, ui) {
@@ -153,15 +152,7 @@ export class Game {
             win = "scissors";
         }
 
-        if (this.ui.bet.value == win) {
-            Storage.addWin();
-        }
-        else {
-            Storage.addLost();
-        }
-
-        this.ui.gameEnd();
-        this.ui.renderResults(win);
+        this.ui.gameEnd(win);
     }
 
     applySkillsEffect(atGameStart = true) {
