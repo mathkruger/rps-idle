@@ -26,7 +26,7 @@
 
                 <div id="login-content">
                     <p>Login with google</p>
-                    <button id="login" class="btn btn-success">
+                    <button style="width: 100%" id="login" class="btn btn-success">
                         Login
                     </button>
                 </div>
@@ -66,17 +66,20 @@
                     </div>
     
                     <div id="final-results"></div>
+
+                    <hr />
+
                     <div id="statistics">
                         <details class="form-control">
-                            <summary>Statistics</summary>
+                            <summary>User</summary>
                             <p class="my-2">
-                                Name: <span class="userName"></span>
+                                Name: <span class="userName"> - </span>
                             </p>
 
                             <ul class="list-group">
-                                <li class="list-group-item">Wins: <span class="wins"></span></li>
-                                <li class="list-group-item">Lost: <span class="lost"></span></li>
-                                <li class="list-group-item">Total: <span class="total"></span></li>
+                                <li class="list-group-item">Wins: <span class="wins"> - </span></li>
+                                <li class="list-group-item">Lost: <span class="lost"> - </span></li>
+                                <li class="list-group-item">Total: <span class="total"> - </span></li>
                             </ul>
 
                             <button style="width: 100%;" id="logout" class="btn btn-danger mt-4">Logout</button>
@@ -88,6 +91,10 @@
     </div>
 
     <div id="partials" tabindex="0"></div>
+
+    <div id="loading">
+        Loading
+    </div>
 
     <div style="display: none;">
         <img id="rock" src="assets/rock.png" />

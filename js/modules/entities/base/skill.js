@@ -4,6 +4,7 @@ export class Skill {
         this.name = name;
         this.description = description;
         this.quantity = 1;
+        this.user_id = null;
     }
 
     action({

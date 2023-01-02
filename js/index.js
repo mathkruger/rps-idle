@@ -1,9 +1,11 @@
 import { Auth } from "./modules/auth/auth.js";
-import { Storage } from "./modules/data/storage.js";
+import { StatisticsStorage } from "./modules/data/statistics.js";
+import { SkillsStorage } from "./modules/data/skills.js";
 import { Game } from "./modules/game.js";
 import { Utils } from "./modules/utils.js";
 
 const auth = new Auth();
+const loadingPanel = document.querySelector("#loading");
 const canvas = document.querySelector("canvas#main-game");
 const toggleButton = document.querySelector(".toggle-button");
 const loginButton = document.querySelector("#login");
@@ -14,11 +16,15 @@ canvas.height = window.innerHeight;
 
 const checkLogin = async () => {
     if (Utils.isUserLoggedIn()) {
+        loadingPanel.classList.add("active");
+
         document.querySelector("#logged-content").style = "";
         document.querySelector("#login-content").style = "display: none;";
 
-        ui.renderUserSkills();
+        await ui.renderUserSkills();
         await ui.renderStatistics();
+
+        loadingPanel.classList.remove("active");
     }
     else {
         document.querySelector("#logged-content").style = "display: none;";
@@ -74,15 +80,15 @@ const ui = {
         this.results.innerHTML += resultHTML;
 
         if (playerWon) {
-            this.givePlayerRandomSkill();
+            await this.givePlayerRandomSkill();
         }
 
-        this.renderUserSkills();
+        await this.renderUserSkills();
         await this.renderStatistics();
     },
 
     async renderStatistics() {
-        const actual = await Storage.getStatistics();
+        const actual = await StatisticsStorage.getStatistics();
         const user = JSON.parse(Utils.isUserLoggedIn()).displayName;
         const sum = parseInt(actual.lost) + parseInt(actual.wins);
         let winrate = 0;
@@ -110,12 +116,13 @@ const ui = {
         let updatePromise = null;
 
         if (this.bet.value == win) {
-            updatePromise = Storage.addWin();
+            updatePromise = StatisticsStorage.addWin();
         }
         else {
-            updatePromise = Storage.addLost();
+            updatePromise = StatisticsStorage.addLost();
         }
 
+        loadingPanel.classList.add("active");
         updatePromise.then(() => {
             return this.renderResults(win);
         }).then(() => {
@@ -123,11 +130,12 @@ const ui = {
             this.bet.removeAttribute("disabled");
             this.speed.removeAttribute("disabled");
             this.panel.classList.add("active");
+            loadingPanel.classList.remove("active");
         });
     },
 
-    renderUserSkills() {
-        const userSkills = Storage.getSkills();
+    async renderUserSkills() {
+        const userSkills = await SkillsStorage.getSkills();
     
         if (userSkills.length == 0) {
             this.skillsList.innerHTML = `<li class="list-group-item">
@@ -149,9 +157,9 @@ const ui = {
         });
     },
 
-    givePlayerRandomSkill() {
+    async givePlayerRandomSkill() {
         const chosenSkill = Utils.availableSkills[Utils.availableSkills.length * Math.random() | 0];
-        Storage.addSkill(chosenSkill);
+        await SkillsStorage.addSkill(chosenSkill);
     
         let newSkillHTML = `
             <div class="mt-4 alert alert-success mt-2" role="alert">
@@ -169,10 +177,11 @@ const ui = {
 
         this.activatedSkills = [];
 
-        selectedIds.forEach(id => {
+        selectedIds.forEach(async id => {
             const skillToActivate = Utils.availableSkills.find(x => x.id == id);
             this.activatedSkills = [...this.activatedSkills, skillToActivate];
-            Storage.removeSkill(skillToActivate.id);
+
+            await SkillsStorage.consumeSkill(skillToActivate.id);
         });
     }
 };
@@ -180,7 +189,12 @@ const ui = {
 const initApp = async () => {
     await checkLogin();
 
-    ui.startButton.addEventListener("click", () => {
+    ui.startButton.addEventListener("click", async () => {
+        if (!Utils.isUserLoggedIn()) {
+            await auth.login();
+            await checkLogin();
+        }
+
         ui.setActivatedSkills();
         new Game(canvas, ui).start();
     });
@@ -196,7 +210,7 @@ const initApp = async () => {
     
     logoutButton.addEventListener("click", async () => {
         auth.logout();
-        await checkLogin();
+        window.location.reload();
     });
 };
 
