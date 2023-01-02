@@ -23,46 +23,65 @@
             </button>
             <div class="content">
                 <h4>RPS Idle</h4>
-                <div class="row mb-4 align-items-end">
-                    <div class="col-12 mb-2">
-                        <p class="mb-0">Your bet</p>
-                        <select class="form-select" id="bet">
-                            <option value="rock">Rock</option>
-                            <option value="paper">Paper</option>
-                            <option value="scissors">Scissors</option>
-                        </select>
-                    </div>
 
-                    <div class="col-12 mb-2">
-                        <p class="mb-0">Speed</p>
-                        <select class="form-select" id="speed">
-                            <option value="1">1x</option>
-                            <option value="2">2x</option>
-                            <option value="4">4x</option>
-                            <option value="8">8x</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <details class="form-control">
-                            <summary>Skills</summary>
-                            <ul id="user-skills" class="list-group list-group-flush">
-                            </ul>
-                        </details>
-                    </div>
-
-                    <div class="col-12 mt-2">
-                        <button style="width: 100%;" class="btn btn-success" id="start">Start!</button>
-                    </div>
+                <div id="login-content">
+                    <p>Login with google</p>
+                    <button id="login" class="btn btn-success">
+                        Login
+                    </button>
                 </div>
 
-                <div id="final-results"></div>
-                <div id="statistics">
-                    <ul class="list-group">
-                        <li class="list-group-item">Wins: <span class="wins"></span></li>
-                        <li class="list-group-item">Lost: <span class="lost"></span></li>
-                        <li class="list-group-item">Total: <span class="total"></span></li>
-                    </ul>
+                <div id="logged-content">
+                    <div class="row mb-4 align-items-end">
+                        <div class="col-12 mb-2">
+                            <p class="mb-0">Your bet</p>
+                            <select class="form-select" id="bet">
+                                <option value="rock">Rock</option>
+                                <option value="paper">Paper</option>
+                                <option value="scissors">Scissors</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-12 mb-2">
+                            <p class="mb-0">Speed</p>
+                            <select class="form-select" id="speed">
+                                <option value="1">1x</option>
+                                <option value="2">2x</option>
+                                <option value="4">4x</option>
+                                <option value="8">8x</option>
+                            </select>
+                        </div>
+    
+                        <div class="col-12">
+                            <details class="form-control">
+                                <summary>Skills</summary>
+                                <ul id="user-skills" class="list-group list-group-flush">
+                                </ul>
+                            </details>
+                        </div>
+    
+                        <div class="col-12 mt-2">
+                            <button style="width: 100%;" class="btn btn-success" id="start">Start!</button>
+                        </div>
+                    </div>
+    
+                    <div id="final-results"></div>
+                    <div id="statistics">
+                        <details class="form-control">
+                            <summary>Statistics</summary>
+                            <p class="my-2">
+                                Name: <span class="userName"></span>
+                            </p>
+
+                            <ul class="list-group">
+                                <li class="list-group-item">Wins: <span class="wins"></span></li>
+                                <li class="list-group-item">Lost: <span class="lost"></span></li>
+                                <li class="list-group-item">Total: <span class="total"></span></li>
+                            </ul>
+
+                            <button style="width: 100%;" id="logout" class="btn btn-danger mt-4">Logout</button>
+                        </details>
+                    </div>
                 </div>
             </div>
         </div>

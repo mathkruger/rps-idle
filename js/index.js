@@ -1,9 +1,30 @@
+import { Auth } from "./modules/auth/auth.js";
 import { Storage } from "./modules/data/storage.js";
 import { Game } from "./modules/game.js";
 import { Utils } from "./modules/utils.js";
 
+const auth = new Auth();
 const canvas = document.querySelector("canvas#main-game");
 const toggleButton = document.querySelector(".toggle-button");
+const loginButton = document.querySelector("#login");
+const logoutButton = document.querySelector("#logout");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const checkLogin = async () => {
+    if (Utils.isUserLoggedIn()) {
+        document.querySelector("#logged-content").style = "";
+        document.querySelector("#login-content").style = "display: none;";
+
+        ui.renderUserSkills();
+        await ui.renderStatistics();
+    }
+    else {
+        document.querySelector("#logged-content").style = "display: none;";
+        document.querySelector("#login-content").style = "";
+    }
+};
 
 const ui = {
     panel: document.querySelector("#ui"),
@@ -39,7 +60,7 @@ const ui = {
         `;
     },
 
-    renderResults(win) {
+    async renderResults(win) {
         let playerWon = this.bet.value == win;
         let alertClass = playerWon ? "alert-success" : "alert-danger";
 
@@ -51,17 +72,18 @@ const ui = {
         `;
 
         this.results.innerHTML += resultHTML;
-        this.renderStatistics();
 
         if (playerWon) {
             this.givePlayerRandomSkill();
         }
 
         this.renderUserSkills();
+        await this.renderStatistics();
     },
 
-    renderStatistics() {
-        const actual = Storage.getStatistics();
+    async renderStatistics() {
+        const actual = await Storage.getStatistics();
+        const user = JSON.parse(Utils.isUserLoggedIn()).displayName;
         const sum = parseInt(actual.lost) + parseInt(actual.wins);
         let winrate = 0;
         
@@ -69,6 +91,7 @@ const ui = {
             winrate = (parseInt(actual.wins) / sum * 100).toFixed(2);
         }
 
+        this.statistics.querySelector(".userName").innerHTML = user;
         this.statistics.querySelector(".wins").innerHTML = actual.wins;
         this.statistics.querySelector(".lost").innerHTML = actual.lost;
         this.statistics.querySelector(".total").innerHTML = `${sum} (Win rate: ${winrate}%)`;
@@ -83,11 +106,24 @@ const ui = {
         this.partials.innerHTML = `<ul class="list-group"></ul>`;
     },
 
-    gameEnd() {
-        this.startButton.removeAttribute("disabled");
-        this.bet.removeAttribute("disabled");
-        this.speed.removeAttribute("disabled");
-        this.panel.classList.add("active");
+    gameEnd(win) {
+        let updatePromise = null;
+
+        if (this.bet.value == win) {
+            updatePromise = Storage.addWin();
+        }
+        else {
+            updatePromise = Storage.addLost();
+        }
+
+        updatePromise.then(() => {
+            return this.renderResults(win);
+        }).then(() => {
+            this.startButton.removeAttribute("disabled");
+            this.bet.removeAttribute("disabled");
+            this.speed.removeAttribute("disabled");
+            this.panel.classList.add("active");
+        });
     },
 
     renderUserSkills() {
@@ -141,17 +177,27 @@ const ui = {
     }
 };
 
-ui.renderUserSkills();
-ui.renderStatistics();
+const initApp = async () => {
+    await checkLogin();
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    ui.startButton.addEventListener("click", () => {
+        ui.setActivatedSkills();
+        new Game(canvas, ui).start();
+    });
+    
+    toggleButton.addEventListener("click", () => {
+        ui.panel.classList.toggle("active");
+    });
+    
+    loginButton.addEventListener("click", async () => {
+        await auth.login();
+        await checkLogin();
+    });
+    
+    logoutButton.addEventListener("click", async () => {
+        auth.logout();
+        await checkLogin();
+    });
+};
 
-ui.startButton.addEventListener("click", () => {
-    ui.setActivatedSkills();
-    new Game(canvas, ui).start();
-});
-
-toggleButton.addEventListener("click", () => {
-    ui.panel.classList.toggle("active");
-});
+initApp();

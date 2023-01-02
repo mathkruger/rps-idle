@@ -1,30 +1,57 @@
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    setDoc,
+    query,
+    where,
+    doc
+} from "../firebase/firebase.js";
+import { Utils } from "../utils.js";
+
 export const Storage = {
-    key: "statistics",
+    keyStatistics: "statistics",
     keySkills: "skills",
+    db: getFirestore(Utils.getFirebaseApp()),
 
-    getStatistics() {
-        const obj = {
-            wins: 0,
-            lost: 0
-        };
+    async getStatistics() {
+        const userId = JSON.parse(Utils.isUserLoggedIn()).uid;
+        const querySnapshot = await getDocs(query(collection(this.db, this.keyStatistics), where("user_id", "==", userId)));
+        
+        if (querySnapshot.empty) {
+            const obj = {
+                id: 0,
+                wins: 0,
+                lost: 0,
+                user_id: userId
+            };
 
-        return JSON.parse(localStorage.getItem(this.key) || JSON.stringify(obj));
+            const docRef = await addDoc(collection(this.db, this.keyStatistics), obj);
+            obj.id = docRef.id;
+
+            return obj;
+        }
+
+        const dataToReturn = querySnapshot.docs[0].data();
+        dataToReturn.id = querySnapshot.docs[0].id;
+        return dataToReturn;
     },
 
-    saveStatistics(newObj) {
-        localStorage.setItem(this.key, JSON.stringify(newObj));
+    async saveStatistics(newObj) {
+        await setDoc(doc(this.db, this.keyStatistics, newObj.id), newObj);
     },
 
-    addWin() {
-        const actual = this.getStatistics();
+    async addWin() {
+        const actual = await this.getStatistics();
         actual.wins += 1;
-        this.saveStatistics(actual);
+        await this.saveStatistics(actual);
     },
 
-    addLost() {
-        const actual = this.getStatistics();
+    async addLost() {
+        const actual = await this.getStatistics();
         actual.lost += 1;
-        this.saveStatistics(actual);
+        await this.saveStatistics(actual);
     },
 
     getSkills() {
