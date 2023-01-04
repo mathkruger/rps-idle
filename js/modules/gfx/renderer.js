@@ -7,6 +7,10 @@ export class Renderer {
 
     render() {
         this.stack.forEach(element => {
+            if (element.particleSystem) {
+                element.particleSystem.render(this.context);
+            }
+            
             switch (element.renderMode) {
                 default:
                 case "rect":
@@ -42,7 +46,6 @@ export class Renderer {
 
     createImage({ x, y, width, height, sprite }) {
         const image = document.getElementById(sprite.id);
-
         this.context.drawImage(image, x, y, width, height);
     }
 

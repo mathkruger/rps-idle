@@ -1,7 +1,8 @@
 import { Entity } from "./entity.js";
+import { ParticleSystem } from "../../gfx/particles/particle-system.js";
 
 export class Element extends Entity {
-    constructor(x, y, sprite, speed = 1) {
+    constructor(x, y, sprite, speed = 1, color = "random") {
         super(x, y, 32, 32, null, speed, "sprite", sprite, true);
 
         const possibleDelta = [2, -2, 3, -3, 4, -4];
@@ -11,6 +12,9 @@ export class Element extends Entity {
         this.win = null;
         this.life = 1;
         this.gotHit = false;
+        this.color = color;
+
+        this.particleSystem = new ParticleSystem(1, 0, 45, this.color, 1, 4, this.speed);
     }
 
     update(canvas) {
@@ -27,6 +31,11 @@ export class Element extends Entity {
 
         this.x += this.dx;
         this.y += this.dy;
+
+        this.particleSystem.generateParticles({
+            x: this.x + (this.width / 2),
+            y: this.y + (this.height / 2)
+        });
     }
 
     checkCollision(elements) {
