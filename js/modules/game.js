@@ -5,7 +5,7 @@ import { Scissors } from "./entities/scissors.js";
 import { Utils } from "./utils.js";
 
 export class Game {
-    constructor(canvas, ui) {
+    constructor(canvas, ui, useRandomBet = false) {
         this.fps = 60;
         this.width = canvas.width;
         this.height = canvas.height;
@@ -31,6 +31,18 @@ export class Game {
                 constructor: Scissors
             }
         ];
+
+        if (useRandomBet) {
+            this.currentBet = this.getRandomElement();
+            this.ui.bet.value = this.currentBet;
+        }
+        else {
+            this.currentBet = this.ui.bet.value;
+        }
+    }
+
+    getRandomElement() {
+        return this.availableElements[this.availableElements.length * Math.random() | 0].name;
     }
 
     create() {
@@ -152,13 +164,13 @@ export class Game {
             win = "scissors";
         }
 
-        this.ui.gameEnd(win);
+        this.ui.gameEnd(win, this.currentBet);
     }
 
     applySkillsEffect(atGameStart = true) {
         this.ui.activatedSkills.forEach((skill) => {
             skill.action({
-                constructor: this.availableElements.find(x => x.name == this.ui.bet.value).constructor,
+                constructor: this.availableElements.find(x => x.name == this.currentBet).constructor,
                 screenElements: this.elements,
                 screenWidth: this.width,
                 screenHeight: this.height,

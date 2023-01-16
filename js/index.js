@@ -41,7 +41,13 @@ const ui = {
     partials: document.querySelector("#partials"),
     statistics: document.querySelector("#statistics"),
     skillsList: document.querySelector("#user-skills"),
+    repeatToggle: document.querySelector("#repeat-play"),
     activatedSkills: [],
+
+    async play() {
+        ui.setActivatedSkills();
+        new Game(canvas, ui, this.repeatToggle.checked).start();
+    },
 
     renderPartials({ qtdRock, qtdPaper, qtdScissors, bigger }) {
         const rangeHTML = `
@@ -107,15 +113,19 @@ const ui = {
         this.startButton.setAttribute("disabled", "true");
         this.bet.setAttribute("disabled", "true");
         this.speed.setAttribute("disabled", "true");
-        this.panel.classList.remove("active");
+
+        if (this.repeatToggle.checked == false) {
+            this.panel.classList.remove("active");
+        }
+        
         this.results.innerHTML = "";
         this.partials.innerHTML = `<ul class="list-group"></ul>`;
     },
 
-    gameEnd(win) {
+    gameEnd(win, currentBet) {
         let updatePromise = null;
 
-        if (this.bet.value == win) {
+        if (currentBet == win) {
             updatePromise = StatisticsStorage.addWin();
         }
         else {
@@ -123,14 +133,20 @@ const ui = {
         }
 
         loadingPanel.classList.add("active");
+
         updatePromise.then(() => {
             return this.renderResults(win);
         }).then(() => {
-            this.startButton.removeAttribute("disabled");
-            this.bet.removeAttribute("disabled");
-            this.speed.removeAttribute("disabled");
-            this.panel.classList.add("active");
             loadingPanel.classList.remove("active");
+
+            if (this.repeatToggle.checked == true) {
+                ui.play();
+            } else {
+                this.startButton.removeAttribute("disabled");
+                this.bet.removeAttribute("disabled");
+                this.speed.removeAttribute("disabled");
+                this.panel.classList.add("active");
+            }
         });
     },
 
@@ -195,8 +211,7 @@ const initApp = async () => {
             await checkLogin();
         }
 
-        ui.setActivatedSkills();
-        new Game(canvas, ui).start();
+        ui.play();
     });
     
     toggleButton.addEventListener("click", () => {

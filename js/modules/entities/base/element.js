@@ -1,5 +1,6 @@
 import { Entity } from "./entity.js";
 import { ParticleSystem } from "../../gfx/particles/particle-system.js";
+import { Utils } from "../../utils.js";
 
 export class Element extends Entity {
     constructor(x, y, sprite, speed = 1, color = "random") {
@@ -14,7 +15,7 @@ export class Element extends Entity {
         this.gotHit = false;
         this.color = color;
 
-        this.particleSystem = new ParticleSystem(1, 0, 45, this.color, 1, 4, this.speed);
+        this.particleSystem = new ParticleSystem(1, 0, 45, this.color, 1, 2.5, this.speed);
     }
 
     update(canvas) {
@@ -32,10 +33,12 @@ export class Element extends Entity {
         this.x += this.dx;
         this.y += this.dy;
 
-        this.particleSystem.generateParticles({
-            x: this.x + (this.width / 2),
-            y: this.y + (this.height / 2)
-        });
+        if (!Utils.mobileCheck()) {
+            this.particleSystem.generateParticles({
+                x: this.x + (this.width / 2),
+                y: this.y + (this.height / 2)
+            });
+        }
     }
 
     checkCollision(elements) {
